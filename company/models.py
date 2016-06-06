@@ -18,6 +18,9 @@ class Industry(WasmanBase):
         super(Industry, self).save(*args, **kwargs)
 
 
+class ProductType(WasmanBase):
+    name = models.CharField(max_length=120)
+
 
 class CompanyBase(WasmanBase):
     name = models.CharField(max_length=120)
@@ -52,14 +55,27 @@ class Producer(CompanyBase):
 
 
 class Recycler(CompanyBase):
-    pass
+    recyclable_types = models.ManyToManyField(ProductType)
 
 
 class Auditor(CompanyBase):
     pass
 
 
-class Product(models.Model):
+class GovernmentAgeny(CompanyBase):
+    industry = models.ForeignKey(Industry, null=True, blank=True)
+
+
+class Product(WasmanBase):
     name = models.CharField(max_length=120)
-    type = models.CharField(max_length=120)
+    type = models.ForeignKey(ProductType, null=True, blank=True)
     producer = models.ForeignKey(Producer)
+    recyclers = models.ManyToManyField(Recycler)
+    auditors = models.ManyToManyField(Auditor)
+
+
+class ProductBatch(WasmanBase):
+    batch_id = models.CharField(max_length=120)
+    product = models.ForeignKey(Product)
+    recycler = models.ForeignKey(Recycler, null=True, blank=True)
+    auditor = models.ForeignKey(Auditor, null=True, blank=True)
