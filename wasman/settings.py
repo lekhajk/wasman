@@ -40,7 +40,9 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'wasman',
     'company',
+    'login',
     'cities',
+    'django_extensions',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -59,7 +61,7 @@ ROOT_URLCONF = 'wasman.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ os.path.join(os.path.dirname(__file__), 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
