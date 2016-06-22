@@ -11,12 +11,15 @@ from company.models import Manufacturer, Recycler
 from django.views.generic import DetailView, UpdateView
 from django.contrib.contenttypes.models import ContentType
 from login.localsettings import manufacturer_group
+from django.db import transaction
 
 
 COMPANY_TYPE_DICT = {'ma': Manufacturer,
                      're': Recycler}
 
+
 @csrf_protect
+@transaction.atomic
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -36,7 +39,9 @@ def register(request):
                                                   object_id=new.id)
 
             if company_model == Manufacturer:
+                user.is_staff = True
                 user.groups.add(manufacturer_group)
+                user.save()
 
             return HttpResponseRedirect('/register/success/')
     else:
@@ -49,16 +54,19 @@ def register(request):
     'registration/register.html',
     variables,
     )
+
  
 def register_success(request):
     return render_to_response(
     'registration/success.html',
     )
+
  
 def logout_page(request):
     logout(request)
     return HttpResponseRedirect('/')
- 
+
+
 @login_required
 def home(request):
     return render_to_response(

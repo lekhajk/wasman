@@ -23,6 +23,8 @@ class ProductType(WasmanBase):
     code = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
+        if self.code:
+            return '%s - %s' %(self.name, self.code)
         return self.name
 
 
@@ -84,11 +86,14 @@ class WasteType(WasmanBase):
 
 class Product(WasmanBase):
     name = models.CharField(max_length=120)
-    type = models.ForeignKey(ProductType, null=True, blank=True)
-    waste_types = models.ManyToManyField(WasteType)
+    type = models.ForeignKey(ProductType, null=True, blank=True, on_delete=models.SET_NULL)
+    waste_types = models.ManyToManyField(WasteType, blank=True)
     manufacturer = models.ForeignKey(Manufacturer, null=True, blank=True)
-    recyclers = models.ManyToManyField(Recycler)
-    auditors = models.ManyToManyField(Auditor)
+    recyclers = models.ManyToManyField(Recycler, blank=True)
+    auditors = models.ManyToManyField(Auditor, blank=True)
+
+    def __unicode__(self):
+        return self.name
 
 
 class ProductBatch(WasmanBase):

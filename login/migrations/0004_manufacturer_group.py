@@ -9,9 +9,9 @@ from django.contrib.contenttypes.models import ContentType
 def create_manufacturer_group(apps, schema_editor):
     g = Group.objects.create(name=manufacturer_group_name)
     Product = apps.get_model('company', 'Product')
-    ProductType = apps.get_model('company', 'ProductType')
+    ProductBatch = apps.get_model('company', 'ProductBatch')
     permissions = Permission.objects.filter(content_type__in=[ContentType.objects.get_for_model(Product),
-                                                              ContentType.objects.get_for_model(ProductType),])
+                                                              ContentType.objects.get_for_model(ProductBatch),])
     for p in permissions:
         g.permissions.add(p)
     

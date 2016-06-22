@@ -12,6 +12,8 @@ def company_profile(request):
         model = type(request.user.userprofile.company)
         if model == Recycler:
             fields.append('recyclable_types')
+        if model == Manufacturer:
+            fields.append('industry')
 
         def get_object(self, query_set=None):
             return self.request.user.userprofile.company
