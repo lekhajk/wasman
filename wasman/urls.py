@@ -37,5 +37,6 @@ urlpatterns = patterns('',
         name='user_profile_edit'),
     url(r'^accounts/profile/$', profile_home),
     url(r'^company_profile/$', company_profile),
-    url(r'^product_management/$', product_management)
+    url(r'^product_management/$', product_management),
+    url(r'^activate/(?P<activation_key>.+)$', activation),
     )

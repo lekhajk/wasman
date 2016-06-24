@@ -7,3 +7,5 @@ try:
     manufacturer_group = Group.objects.get(name=manufacturer_group_name)
 except Group.DoesNotExist:
     manufacturer_group= None
+
+activation_domain = 'localhost:8000'

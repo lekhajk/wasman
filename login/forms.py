@@ -15,8 +15,12 @@ class RegistrationForm(forms.Form):
 
     MANUFACTURER = 'ma'
     RECYCLER = 're'
+    AUDITOR = 'au'
+    GOVERNMENT_AGENCY = 'ga'
     types = ((MANUFACTURER, 'Manufacturer'),
              (RECYCLER, 'Recycler'),
+             (GOVERNMENT_AGENCY, 'Overseer'),
+             (AUDITOR, 'Auditor')
              )
     type = forms.ChoiceField(choices=types,)
  

@@ -76,7 +76,7 @@ class Auditor(CompanyBase):
     pass
 
 
-class GovernmentAgeny(CompanyBase):
+class GovernmentAgency(CompanyBase):
     industry = models.ForeignKey(Industry, null=True, blank=True)
 
 
