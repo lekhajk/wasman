@@ -62,6 +62,7 @@ class Manufacturer(CompanyBase):
 
 class Recycler(CompanyBase):
     recyclable_types = models.ManyToManyField(ProductType)
+    capacity = models.IntegerField(null=True, blank=True)
 
 
 class Dismantler(CompanyBase):

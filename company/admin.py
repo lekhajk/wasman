@@ -1,5 +1,5 @@
 from django.contrib import admin
-from company.models import Product, ProductBatch
+from company.models import Product, ProductBatch, Recycler
 # 
 # Register your models here.
 #
@@ -37,5 +37,11 @@ class ProductBatchAdmin(admin.ModelAdmin):
         return super(ProductBatchAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
  
+class RecyclerAdmin(admin.ModelAdmin):
+    fields = ('name', 'state', 'capacity', 'raw_address')
+    list_display = ('name', 'state', 'capacity', 'raw_address')
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductBatch, ProductBatchAdmin)
+admin.site.register(Recycler, RecyclerAdmin)
