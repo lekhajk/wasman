@@ -1,5 +1,7 @@
 from django.contrib import admin
-from company.models import Product, ProductBatch, Recycler, WasteType
+from company.models import Product, ProductBatch, Recycler, WasteType,\
+    ProductBatchEph, RecAudPair
+from django import forms
 # 
 # Register your models here.
 #
@@ -47,7 +49,35 @@ class WasteTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_hazardous')
 
 
+class ProductBatchEphForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProductBatchEphForm, self).__init__(*args, **kwargs)
+        pairs = self.instance.rec_aud_pairs.all()
+        choices = [(a.id, a) for a in pairs]
+        self.fields['recycler_auditor_pair'] = forms.ChoiceField(choices = choices)
+
+    
+    recycler_auditor_pair = forms.CharField()
+
+    class Meta:
+        model = ProductBatchEph
+        fields = ('recycler_auditor_pair', )
+
+
+class ProductBatchEphAdmin(admin.ModelAdmin):
+    form = ProductBatchEphForm
+
+    def save_model(self, request, obj, form, change):
+        super(ProductBatchEphAdmin, self).save_model(request, obj, form, change)
+        if form.cleaned_data['recycler_auditor_pair']:
+            rec_aud_pair = RecAudPair.objects.get(id=form.cleaned_data['recycler_auditor_pair'])
+            obj.product_batch.recycler = rec_aud_pair.recycler
+            obj.product_batch.auditor = rec_aud_pair.auditor
+            obj.product_batch.save()
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductBatch, ProductBatchAdmin)
 admin.site.register(Recycler, RecyclerAdmin)
 admin.site.register(WasteType, WasteTypeAdmin)
+admin.site.register(ProductBatchEph, ProductBatchEphAdmin)

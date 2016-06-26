@@ -11,7 +11,7 @@ from company.models import Manufacturer, Recycler, Auditor,\
     GovernmentAgency
 from django.views.generic import DetailView, UpdateView
 from django.contrib.contenttypes.models import ContentType
-from login.localsettings import manufacturer_group
+from login.localsettings import manufacturer_group, government_agency_group
 from django.db import transaction
 import random
 import hashlib
@@ -42,16 +42,21 @@ def register(request):
             new = company_model.objects.create()
 
             k = hashlib.sha1(str(random.randint(10000000, 99999999)) + form.cleaned_data['username']).hexdigest()
+            phone_number = form.cleaned_data['phone_number']
             up = UserProfile.objects.create(user=user,
                                             content_type=ContentType.objects.get_for_model(company_model),
                                             object_id=new.id,
-                                            activation_key=k)
+                                            activation_key=k,
+                                            phone_number=phone_number)
             
             up.send_activation_mail()
             if company_model == Manufacturer:
                 user.is_staff = True
                 user.groups.add(manufacturer_group)
                 user.save()
+            if company_model == GovernmentAgency:
+                user.is_staff = True
+                user.groups.add(government_agency_group)
 
             return HttpResponseRedirect('/register/success/')
     else:

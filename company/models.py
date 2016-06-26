@@ -1,6 +1,8 @@
 from django.db import models
 from wasman.models import WasmanBase
 from cities.models import Country, Region, City, PostalCode
+from company.localsettings import max_rec_aud_pairs
+import random
 
 
 
@@ -107,6 +109,15 @@ class ProductBatch(WasmanBase):
     recycler = models.ForeignKey(Recycler, null=True, blank=True)
     auditor = models.ForeignKey(Auditor, null=True, blank=True)
 
+    def __unicode__(self):
+        return '%s | %s' % (unicode(self.product), self.batch_id)
+    
+    def save(self, *args, **kwargs):
+        created = not bool(self.pk)
+        super(ProductBatch, self).save(*args, **kwargs)
+        if created:
+            ProductBatchEph.create_product_batch_eph(self)
+
 
 class Producer(CompanyBase):
     products = models.ManyToManyField(Product)
@@ -120,3 +131,35 @@ class Producer(CompanyBase):
                       (DEALER, 'Dealer'),
                       )
     type = models.CharField(choices=producer_types, max_length=2, null=True, blank=True)
+
+
+class RecAudPair(WasmanBase):
+    recycler = models.ForeignKey(Recycler)
+    auditor = models.ForeignKey(Auditor)
+
+    def __unicode__(self):
+        return '%s | %s' % (self.recycler, self.auditor)
+
+    @property
+    def pair(self):
+        return (self.recycler, self.auditor)
+
+
+class ProductBatchEph(WasmanBase):
+    product_batch = models.OneToOneField(ProductBatch)
+    rec_aud_pairs = models.ManyToManyField(RecAudPair, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.product_batch)
+
+    @classmethod
+    def create_product_batch_eph(cls, product_batch):
+        recyclers = product_batch.product.recyclers.all()
+        auditors = product_batch.product.auditors.all()
+        pairs_count = min([len(recyclers), len(auditors), max_rec_aud_pairs])
+        if pairs_count:
+            batch_eph = cls.objects.create(product_batch=product_batch)
+            pairs = zip(random.sample(recyclers, pairs_count), random.sample(auditors, pairs_count))
+            for pair in pairs:
+                ra_pair, _ = RecAudPair.objects.get_or_create(recycler=pair[0], auditor=pair[1])
+                batch_eph.rec_aud_pairs.add(ra_pair)
