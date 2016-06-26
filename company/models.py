@@ -83,6 +83,10 @@ class GovernmentAgency(CompanyBase):
 
 class WasteType(WasmanBase):
     name = models.CharField(max_length = 120)
+    is_hazardous = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.name
 
 
 class Product(WasmanBase):

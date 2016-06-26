@@ -1,5 +1,5 @@
 from django.contrib import admin
-from company.models import Product, ProductBatch, Recycler
+from company.models import Product, ProductBatch, Recycler, WasteType
 # 
 # Register your models here.
 #
@@ -42,6 +42,12 @@ class RecyclerAdmin(admin.ModelAdmin):
     list_display = ('name', 'state', 'capacity', 'raw_address')
 
 
+class WasteTypeAdmin(admin.ModelAdmin):
+    fields = ('name', 'is_harzardous')
+    list_display = ('name', 'is_hazardous')
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductBatch, ProductBatchAdmin)
 admin.site.register(Recycler, RecyclerAdmin)
+admin.site.register(WasteType, WasteTypeAdmin)
