@@ -101,9 +101,10 @@ def activation(request, activation_key):
 def profile_home(request):
     if type(request.user.userprofile.company) == Manufacturer:
         return render_to_response('login/manufacturer_profile_home.html')
+    elif type(request.user.userprofile.company) == GovernmentAgency:
+        return render_to_response('login/ga_profile_home.html')
     elif type(request.user.userprofile.company) == Recycler or\
-         type(request.user.userprofile.company) == Auditor or \
-         type(request.user.userprofile.company) == GovernmentAgency:
+         type(request.user.userprofile.company) == Auditor:
         return render_to_response('login/recycler_profile_home.html')
 
 

@@ -25,6 +25,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 class ProductBatchAdmin(admin.ModelAdmin):
     fields = ('batch_id', 'product', 'recycler', 'auditor', )
+    readonly_fields = ('recycler', 'auditor', )
     list_display = ('batch_id', 'product', 'recycler', 'auditor', )
 
     def get_queryset(self, request):
@@ -34,9 +35,12 @@ class ProductBatchAdmin(admin.ModelAdmin):
         return qs.filter(product__manufacturer=request.user.userprofile.company)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'product':
-            kwargs["queryset"] = Product.objects.filter(manufacturer=request.user.userprofile.company)
-        return super(ProductBatchAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        try:
+            if db_field.name == 'product':
+                kwargs["queryset"] = Product.objects.filter(manufacturer=request.user.userprofile.company)
+            return super(ProductBatchAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        except:
+            return super(ProductBatchAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
  
 class RecyclerAdmin(admin.ModelAdmin):
