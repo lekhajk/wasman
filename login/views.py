@@ -57,6 +57,7 @@ def register(request):
             if company_model == GovernmentAgency:
                 user.is_staff = True
                 user.groups.add(government_agency_group)
+                user.save()
 
             return HttpResponseRedirect('/register/success/')
     else:
