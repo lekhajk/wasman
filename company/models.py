@@ -50,7 +50,8 @@ class CompanyBase(WasmanBase):
         return self.name
 
 class Manufacturer(CompanyBase):
-    industry = models.ForeignKey(Industry, null=True, blank=True)
+    industry = models.ForeignKey(Industry, null=True, blank=True,
+                                 help_text = 'populated from "https://help.salesforce.com/apex/HTViewSolution?id=000057339"')
     stock_ticker = models.CharField(max_length=120)
 
     def primary_industry(self):
@@ -63,7 +64,9 @@ class Manufacturer(CompanyBase):
 
 
 class Recycler(CompanyBase):
-    recyclable_types = models.ManyToManyField(ProductType)
+    recyclable_types = models.ManyToManyField(ProductType,
+                                              help_text = 'taken from page-17 of "http://www.moef.gov.in/site'
+                                              's/default/files/EWM Rules 2016 english 23.03.2016.pdf"')
     capacity = models.IntegerField(null=True, blank=True)
 
 
@@ -93,8 +96,11 @@ class WasteType(WasmanBase):
 
 class Product(WasmanBase):
     name = models.CharField(max_length=120)
-    type = models.ForeignKey(ProductType, null=True, blank=True, on_delete=models.SET_NULL)
-    waste_types = models.ManyToManyField(WasteType, blank=True)
+    type = models.ForeignKey(ProductType, null=True, blank=True, on_delete=models.SET_NULL,
+                             help_text = 'taken from page-17 of "http://www.moef.gov.in/site'
+                                         's/default/files/EWM Rules 2016 english 23.03.2016.pdf"')
+    waste_types = models.ManyToManyField(WasteType, blank=True,
+                                         help_text='populated from "https://en.wikipedia.org/wiki/Electronic_waste”"')
     manufacturer = models.ForeignKey(Manufacturer, null=True, blank=True)
     recyclers = models.ManyToManyField(Recycler, blank=True)
     auditors = models.ManyToManyField(Auditor, blank=True)
