@@ -100,7 +100,7 @@ class Product(WasmanBase):
                              help_text = 'taken from page-17 of "http://www.moef.gov.in/site'
                                          's/default/files/EWM Rules 2016 english 23.03.2016.pdf"')
     waste_types = models.ManyToManyField(WasteType, blank=True,
-                                         help_text='populated from "https://en.wikipedia.org/wiki/Electronic_waste”"')
+                                         help_text='populated from "https://en.wikipedia.org/wiki/Electronic_waste"')
     manufacturer = models.ForeignKey(Manufacturer, null=True, blank=True)
     recyclers = models.ManyToManyField(Recycler, blank=True)
     auditors = models.ManyToManyField(Auditor, blank=True)
