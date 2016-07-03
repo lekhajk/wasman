@@ -4,7 +4,7 @@
 
 To deploy this project follow the following steps
 
-- sudo apt-get install python-pip python-dev libmysqlclient-dev binutils libproj-dev gdal-bin git
+```sudo apt-get install python-pip python-dev libmysqlclient-dev binutils libproj-dev gdal-bin git```
 
 **Setup the database**
 ```
