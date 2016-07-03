@@ -2,6 +2,7 @@ from django.contrib import admin
 from company.models import Product, ProductBatch, Recycler, WasteType,\
     ProductBatchEph, RecAudPair
 from django import forms
+from company.filters import WorkedOnFilter
 # 
 # Register your models here.
 #
@@ -70,6 +71,8 @@ class ProductBatchEphForm(forms.ModelForm):
 
 class ProductBatchEphAdmin(admin.ModelAdmin):
     form = ProductBatchEphForm
+    list_display = ('id', )
+    list_filter = (WorkedOnFilter, )
 
     def save_model(self, request, obj, form, change):
         super(ProductBatchEphAdmin, self).save_model(request, obj, form, change)
