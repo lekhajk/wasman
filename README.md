@@ -42,4 +42,4 @@ python manage.py migrate
 
 `python manage.py runserver` for local acccess on localhost:8000
 
-`python manage.py runserver 0.0.0.0:8000` fot internal and external access
+`python manage.py runserver 0.0.0.0:8000` for internal and external access
